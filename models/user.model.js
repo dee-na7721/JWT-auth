@@ -2,6 +2,7 @@ const config = require("config");
 const jwt = require("jsonwebtoken");
 const Joi = require("joi"); //schema desc language and data validator for JS
 const mongoose = require("mongoose");
+const { connect } = require("../routes/users.route");
 
 // simple Schema
 const UserSchema = mongoose.Schema({
@@ -30,25 +31,12 @@ const UserSchema = mongoose.Schema({
 UserSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
     { _id: this._id, isAdmin: this.isAdmin },
-    config.get("privatekey")
-  ); //get the private key from the config file -> environment variable
+    config.get("myprivatekey")
+  );
+  console.log(token);
+  //get the private key from the config file -> environment variable
   return token;
 };
 
-//Creating a user model
-const User = mongoose.model("User", UserSchema);
-
-//function to validate user
-function validateUser(user) {
-  const schema = {
-    name: Joi.string().min(3).max(50).required(),
-    email: Joi.string().min(5).max(255).required().email(),
-    password: Joi.string().min(3).max(255).required(),
-  };
-
-  return Joi.validate(user, schema);
-}
-
-//exporting user model and validateUser func
-exports.User = User;
-exports.validate = validateUser;
+//exporting a user model
+module.exports = mongoose.model("User", UserSchema);

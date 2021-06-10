@@ -1,3 +1,5 @@
+//Entrance to the application
+
 const config = require("config");
 const mongoose = require("mongoose");
 const usersRoute = require("./routes/users.route");
@@ -22,6 +24,7 @@ mongoose
 app.use(express.json());
 
 //use users route for api/users
+
 app.use("/api/users", usersRoute);
 
 const port = process.env.PORT || 3000;
